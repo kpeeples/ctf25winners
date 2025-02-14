@@ -57,7 +57,7 @@
         shell: /bin/bash
       loop: "{{ users }}"
 
-    - name: Set up SSH key for users
+    - name: Set up SSH key for users test
       authorized_key:
         user: "{{ item.name }}"
         state: present
