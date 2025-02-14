@@ -1,0 +1,65 @@
+---
+- name: Create and configure users
+  hosts: all
+  become: yes
+  vars:
+    users:
+      - name: Annabelle
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "Sales"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Bob
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "IT"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Carl
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "Support"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Dyson
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "Dyson"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Evert
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "IT"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Frank
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "Sales"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Gerry
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "Support"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Harold
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "IT"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Isabella
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "Services"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+      - name: Jameson
+        password: "{{ '@#FD12' | password_hash('sha512') }}"
+        groups: "Services"
+        ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFN90Xtfjxqs2ZpO0VqR1jr92mJiTx3IaEl/F+LiOZJK"
+
+  tasks:
+
+    - name: Create users
+      user:
+        name: "{{ item.name }}"
+        password: "{{ item.password }}"
+        groups: "{{ item.groups }}"
+        append: yes
+        create_home: yes
+        shell: /bin/bash
+      loop: "{{ users }}"
+
+    - name: Set up SSH key for users
+      authorized_key:
+        user: "{{ item.name }}"
+        state: present
+        key: "{{ item.ssh_key }}"
+      loop: "{{ users }}"
